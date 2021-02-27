@@ -25,7 +25,7 @@ namespace Hackathon.Application.Shared.Emails
         {
             var apiKey = _configuration["SendGridAPI"];
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("noreply@hekatlon.com", "Hekatlon");
+            var from = new EmailAddress("mh7860@student.uni-lj.si", "Hekatlon");
             var subject = subjectMessage;
             var to = new EmailAddress(email);
             var plainTextContent = message;
