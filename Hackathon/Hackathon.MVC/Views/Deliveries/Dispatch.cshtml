@@ -1,0 +1,121 @@
+﻿@using Newtonsoft.Json
+@model Hackathon.MVC.ViewModels.Delivery.DeliveryViewModel
+
+
+    <script type="text/javascript">
+    function convertDatetime(datetime) {
+        var date = new Date(datetime);
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = date.getHours();     // yields hours
+        var minute = date.getMinutes(); // yields minutes
+        var second = date.getSeconds(); // yields seconds
+
+        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second;
+        return time;
+    }
+
+
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+        console.log();
+
+        let calendarEl = document.getElementById('calendar');
+        let startTime = document.getElementById('startTime');
+        let endTime = document.getElementById('endTime');
+        let c = 0;
+
+        var calendar = new FullCalendar.Calendar(calendarEl,
+            {
+                plugins: ['interaction', 'dayGrid', 'timeGrid'],
+                selectable: true,
+                droppable: true,
+                editable: true,
+                themeSystem: 'bootstrap',
+                defaultView: 'timeGridWeek',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'timeGridWeek'
+                },
+                minTime: '06:00:00',
+                maxTime: '18:00:00',
+                slotDuration: '00:30:00',
+                nowIndicator: true,
+                theme: 'cosmo',
+                eventOverlap: false,
+                events: @{ @Html.Raw(JsonConvert.SerializeObject(Model.DeliveryEvents)) },
+                eventDrop: function(info) {
+                    startTime.value = convertDatetime(info.event.start);
+                    endTime.value = convertDatetime(info.event.end);
+                },
+                select: function(info) {
+                    if (c === 0) {
+                        this.addEvent(
+                            {
+                                title: 'Dostava',
+                                start: info.startStr,
+                                end: info.endStr,
+                                editable: true,
+                                eventOverlap: false,
+                                durationEditable: false
+                            }
+                        );
+                        this.selectable = false;
+                        startTime.value = convertDatetime(info.startStr);
+                        endTime.value = convertDatetime(info.endStr);
+                        c++;
+                    }
+                },
+            });
+        calendar.render();
+    });
+    </script>
+<div class="dispatch-form-width login-form">
+    <form asp-action="Dispatch">
+        <div class="avatar">
+            <i class="material-icons">local_shipping</i>
+        </div>
+        <h4 class="modal-title">Odpošlji</h4>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <div class="form-group">
+            <label>Šifra pošiljke</label>
+            <p>@Html.DisplayFor(modelItem => modelItem.Code)</p>
+        </div>
+        <div class="form-group">
+            <label asp-for="DeliveryPointId">Dostavne točke</label>
+            <select class="form-control" asp-for="DeliveryPointId" required="required">
+                <option value="">-- Prosimo izberite dostavno točko --</option>
+                @foreach (var deliveryPoint in Model.DeliveryPoints)
+                {
+                    <option value="@deliveryPoint.Id">@deliveryPoint.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DeliveryPoint" class="text-danger"></span>
+        </div>
+        <div class="form-group" >
+            <input id="startTime" asp-for="DispatchTime" type="hidden" class="form-control" required="required">
+
+        </div>
+        <div class="form-group" >
+            <input id="endTime" asp-for="DeliveryTime" type="hidden" class="form-control" required="required">
+        </div>
+        <div class="form-group">
+            <span asp-validation-for="DispatchTime" class="text-danger"></span>
+            <span asp-validation-for="DeliveryTime" class="text-danger"></span>
+            <div id='calendar'></div>
+        </div>
+        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Odpošlji">
+    </form>
+</div>
+
+<div class="text-center">
+    <a asp-action="Index">Nazaj na seznam</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

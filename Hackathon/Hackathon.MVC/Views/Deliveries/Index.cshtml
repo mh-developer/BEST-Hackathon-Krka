@@ -1,0 +1,203 @@
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Hackathon.Domain.DeliveryAggregate
+@model Hackathon.MVC.ViewModels.Delivery.DeliveryViewModel
+
+
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-5">
+                    <h2>Zahtevki za dostavo pošiljke</h2>
+                </div>
+                <div class="col-sm-7">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="material-icons">&#xE147;</i> <span>Dodaj zahtevek</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Šifra</th>
+                <th>Skladišče</th>
+                <th>Podjetje</th>
+                <th>Čas zahtevka</th>
+                <th>Akcije</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var item in Model.DeliveriesRequests)
+            {
+                @if (item.Status == DeliveryStatus.None)
+                 {
+                     <tr>
+                         <td>@Html.DisplayFor(modelItem => item.Code)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DeliveryPoint.Warehouse.Name)</td>
+                         <td>
+                             @Html.DisplayFor(modelItem => item.DestinationCompany.Name)
+                         </td>
+                         <td>@Html.DisplayFor(modelItem => item.CreationTime)</td>
+                         <td>
+                             <a asp-action="Dispatch" asp-route-id="@item.Id" class="dispatch" title="Pošlji" data-toggle="tooltip">
+                                 <i class="material-icons">local_shipping</i>
+                             </a>
+                             <a asp-action="Edit" asp-route-id="@item.Id" class="settings" title="Uredi" data-toggle="tooltip">
+                                 <i class="material-icons">&#xE8B8;</i>
+                             </a>
+                             <a asp-action="Delete" asp-route-id="@item.Id" class="delete" title="Odstrani" data-toggle="tooltip">
+                                 <i class="material-icons">&#xE5C9;</i>
+                             </a>
+                         </td>
+                     </tr>
+                 }
+            }
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="hint-text">Prikazanih <b>@Model.DeliveriesRequests.Count()</b> od <b>@Model.DeliveriesRequests.Count()</b> zapisov.</div>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a href="#">Nazaj</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">5</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">Naprej</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-5">
+                    <h2>Pošiljke v procesu dostave</h2>
+                </div>
+                <div class="col-sm-7">
+                    <a href="#" class="btn btn-primary">
+                        <i class="material-icons">&#xE24D;</i> <span>Izvozi v Pdf</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Šifra</th>
+                <th>Podjetje</th>
+                <th>Skladišče</th>
+                <th>Dostavna točka</th>
+                <th>Čas zahtevka</th>
+                <th>Čas odprave</th>
+                <th>Čas dostave</th>
+                <th>Status</th>
+                <th>Akcije</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.DeliveriesInProgress)
+            {
+                @if (item.Status != DeliveryStatus.None)
+                 {
+                     <tr>
+                         <td>@Html.DisplayFor(modelItem => item.Code)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DestinationCompany.Name)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DeliveryPoint.Warehouse.Name)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DeliveryPoint.Name)</td>
+                         <td>@Html.DisplayFor(modelItem => item.CreationTime)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DispatchTime)</td>
+                         <td>@Html.DisplayFor(modelItem => item.DeliveryTime)</td>
+                         @{
+                             switch (item.Status)
+                             {
+                                 case DeliveryStatus.InProgress:
+                                     <text>
+                                         <td><span class="status text-warning">&bull;</span> Na poti</td>
+                                     </text>
+                                     break;
+
+                                 case DeliveryStatus.Received:
+                                     <text>
+                                         <td><span class="status text-success">&bull;</span> Dostavljena</td>
+                                     </text>
+                                     break;
+
+                                 case DeliveryStatus.Rejected:
+                                     <text>
+                                         <td><span class="status text-danger">&bull;</span> Suspendirana</td>
+                                     </text>
+                                     break;
+
+                                 default:
+                                     <text>
+                                         <td><span class="status text-warning">&bull;</span> Na poti</td>
+                                     </text>
+                                     break;
+                             }
+                         }
+                         <td>
+                             <a asp-action="Edit" asp-route-id="@item.Id" class="settings" title="Uredi" data-toggle="tooltip">
+                                 <i class="material-icons">&#xE8B8;</i>
+                             </a>
+                             <a asp-action="Delete" asp-route-id="@item.Id" class="delete" title="Odstrani" data-toggle="tooltip">
+                                 <i class="material-icons">&#xE5C9;</i>
+                             </a>
+                             @if (item.Status != DeliveryStatus.Received)
+                             {
+                                 <a asp-action="Accept" asp-route-id="@item.Id" class="dispatch" title="Prevzemi" data-toggle="tooltip">
+                                     <i class="material-icons">done</i>
+                                 </a>
+                             }
+                         </td>
+                     </tr>
+                 }
+            }
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="hint-text">Prikazanih <b>@Model.DeliveriesInProgress.Count()</b> od <b>@Model.DeliveriesInProgress.Count()</b> zapisov.</div>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a href="#">Nazaj</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">5</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">Naprej</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

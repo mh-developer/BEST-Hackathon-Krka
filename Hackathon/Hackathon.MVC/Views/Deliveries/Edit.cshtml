@@ -1,0 +1,44 @@
+﻿@model Hackathon.Application.Deliveries.DeliveryDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+    <div class="login-form">
+        <form asp-action="Edit">
+            <div class="avatar"><i class="material-icons">local_shipping</i></div>
+            <h4 class="modal-title">Urejanje pošiljke</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <input asp-for="Code" type="number" class="form-control" placeholder="Šifra" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Status" type="text" class="form-control" placeholder="Status" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="DispatchTime" type="datetime" class="form-control" placeholder="Čas odprave" />
+                <span asp-validation-for="DispatchTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="DeliveryTime" type="datetime" class="form-control" placeholder="Čas dostave" />
+                <span asp-validation-for="DeliveryTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="CreationTime" type="tel" class="form-control" placeholder="Čas zahtevka" />
+                <span asp-validation-for="CreationTime" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" class="btn btn-primary btn-block btn-lg" value="Shrani">
+        </form>
+    </div>
+
+<div class="text-center">
+    <a asp-action="Index">Nazaj na seznam</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

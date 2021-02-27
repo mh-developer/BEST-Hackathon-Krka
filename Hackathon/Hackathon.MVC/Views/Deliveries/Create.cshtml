@@ -1,0 +1,29 @@
+﻿@model Hackathon.Application.Deliveries.DeliveryDto
+
+<div class="login-form">
+    <form asp-action="Create">
+        <div class="avatar">
+            <i class="material-icons">mail</i>
+        </div>
+        <h4 class="modal-title">Nov zahtevek za pošiljko</h4>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <input asp-for="Code" type="text" class="form-control" placeholder="Šifra pošiljke" required="required">
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <select asp-for="SourceCompanyId" class="form-control" asp-items="ViewBag.Companies" placeholder="Podjetje, ki dostavlja" required="required"></select>
+            <span asp-validation-for="SourceCompany.Name" class="text-danger"></span>
+        </div>
+        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Oddaja zahtevka">
+    </form>
+</div>
+
+<div class="text-center">
+    <a asp-action="Index">Nazaj na seznam</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
