@@ -1,0 +1,44 @@
+﻿@model Hackathon.Application.Warehouses.WarehouseDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="login-form">
+    <form asp-action="Edit">
+        <div class="avatar"><i class="material-icons">home</i></div>
+        <h4 class="modal-title">Urejanje skladišča</h4>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <input asp-for="MinCode" type="number" class="form-control" placeholder="Min koda" required/>
+            <span asp-validation-for="MinCode" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="MaxCode" type="number" class="form-control" placeholder="Max koda" required/>
+            <span asp-validation-for="MaxCode" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Name" type="text" class="form-control" placeholder="Naziv" required/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Address" type="text" class="form-control" placeholder="Naslov" required/>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Tel. številka" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Shrani">
+    </form>
+</div>
+
+<div class="text-center">
+    <a asp-action="Index">Nazaj na seznam</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

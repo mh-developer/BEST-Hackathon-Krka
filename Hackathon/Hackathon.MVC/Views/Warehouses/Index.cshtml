@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Hackathon.Application.Warehouses.WarehouseDto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-5">
+                    <h2>Skladišča</h2>
+                </div>
+                <div class="col-sm-7">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="material-icons">&#xE147;</i> <span>Dodaj skladišče</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Naslov</th>
+                <th>Razpon kode</th>
+                <th>Status</th>
+                <th>Akcije</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                    <td>@Html.DisplayFor(modelItem => item.MinCode) - @Html.DisplayFor(modelItem => item.MaxCode)</td>
+                    <td><span class="status text-success">&bull;</span> Obratuje</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="settings" title="Uredi" data-toggle="tooltip">
+                            <i class="material-icons">&#xE8B8;</i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="delete" title="Izbriši" data-toggle="tooltip">
+                            <i class="material-icons">&#xE5C9;</i>
+                        </a>
+                        <br />
+                        <a asp-action="Details" asp-route-id="@item.Id" class="settings" title="Podrobnosti" data-toggle="tooltip">
+                            <i class="material-icons">&#xE8B8;</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <div class="hint-text">Prikazanih <b>@Model.Count()</b> od <b>@Model.Count()</b> zapisov.</div>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a href="#">Nazaj</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">5</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">Naprej</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
