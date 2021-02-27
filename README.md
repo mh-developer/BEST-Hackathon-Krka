@@ -38,15 +38,22 @@ Ko imate pripravljena razvijalska okolja, zaženite sledeče ukaze:
 
 - ASP.NET Core MVC 5.0
 - ASP.NET Core API 5.0
-- Za pošiljanje e-mailov SendGrid
+- SendGrid - Za pošiljanje e-mailov
+- Bootstrap 4 - Mobile first
+- Docker
+- Azure Cloud
 
 ## Uporabljen pristop
 
 - "Code first"
 - "Soft delete"
-- 
 
-## Struktura aplikacije
+## Objavljeno na Azure Cloud
+
+- http://hackathon-web.westeurope.azurecontainer.io/
+- http://hackathon-api.westeurope.azurecontainer.io/
+
+## Struktura aplikacije in razslojevanje aplikacije
 
 - Hackathon.Domain -> organizacija podatkovnih modelov aplikacije
 - Hackathon.Infrastructure -> organizacija migracij in komunikaje z podatkovno bazo
