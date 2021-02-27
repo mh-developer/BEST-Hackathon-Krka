@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hackathon.Infrastructure;
 
 namespace Hackathon.MVC.Controllers
 {
@@ -27,7 +26,6 @@ namespace Hackathon.MVC.Controllers
         private readonly IDeliveryPointService _deliveryPointService;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly ICompanyService _companyService;
-        private readonly ApplicationDbContext _context;
 
         public DeliveryPointsController(
             ILogger<DeliveryPointsController> logger,
@@ -36,8 +34,7 @@ namespace Hackathon.MVC.Controllers
             IUserService userService,
             IDeliveryPointService deliveryPointService,
             IWarehouseService warehouseService,
-            ICompanyService companyService,
-            ApplicationDbContext context)
+            ICompanyService companyService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -46,7 +43,6 @@ namespace Hackathon.MVC.Controllers
             _deliveryPointService = deliveryPointService;
             _schemeProvider = schemeProvider;
             _companyService = companyService;
-            _context = context;
         }
 
         // GET: DeliveryPoints
@@ -73,9 +69,9 @@ namespace Hackathon.MVC.Controllers
         }
 
         // GET: DeliveryPoints/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Name");
+            ViewData["WarehouseId"] = new SelectList(await _warehouseService.GetAllAsync(), "Id", "Name");
             return View();
         }
 
@@ -94,7 +90,8 @@ namespace Hackathon.MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Name", deliveryPoint.WarehouseId);
+            ViewData["WarehouseId"] = new SelectList(await _warehouseService.GetAllAsync(), "Id", "Name",
+                deliveryPoint.WarehouseId);
             return View(deliveryPoint);
         }
 
@@ -175,7 +172,7 @@ namespace Hackathon.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var deliveryPoint = await _context.DeliveryPoints.FindAsync(id);
+            var deliveryPoint = await _deliveryPointService.GetAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

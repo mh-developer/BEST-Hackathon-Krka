@@ -1,5 +1,4 @@
 ﻿using Hackathon.Application.Companies;
-using Hackathon.Application.Users;
 using Hackathon.Domain.UserAggregate;
 using Hackathon.MVC.ViewModels.Account;
 using Microsoft.AspNetCore.Authentication;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -24,29 +22,20 @@ namespace Hackathon.MVC.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IUserService _userService;
         private readonly ICompanyService _companyService;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
 
         public AccountController(
             ILogger<AccountController> logger,
-            IAuthenticationSchemeProvider schemeProvider,
-            IConfiguration configuration,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
-            IUserService userService,
             ICompanyService companyService,
             IEmailSender emailSender)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
-            _userService = userService;
             _companyService = companyService;
-            _configuration = configuration;
-            _schemeProvider = schemeProvider;
             _emailSender = emailSender;
         }
 
